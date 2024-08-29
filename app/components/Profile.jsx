@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import React from "react";
 import toast, { Toaster } from "react-hot-toast";
 
@@ -24,10 +25,11 @@ const Profile = () => {
             onClick={() =>
               toast.success("You have joined the waitlist. Thanks!")
             }
-            className="px-8 py-4 bg-[#FC0254] rounded-full text-xl"
+            className="px-8 py-4 mb-4 bg-[#FC0254] rounded-full text-xl"
           >
             Join Waitlist
           </button>
+          <Link href={'/'}>Back to home</Link>
         </div>
       </div>
     </>

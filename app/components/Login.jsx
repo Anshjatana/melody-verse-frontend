@@ -1,22 +1,42 @@
 "use client";
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Eye, EyeOff } from "lucide-react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import useAuthStore from "../store";
+import { setCookie } from "cookies-next";
 
 const Login = () => {
   const router = useRouter();
-  const [data, setData] = useState({
-    email: "",
-    password: "",
-  });
-  const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
+  const {
+    data,
+    setData,
+    showPassword,
+    toggleShowPassword,
+    rememberMe,
+    toggleRememberMe,
+    error,
+    setError,
+  } = useAuthStore();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // Adding validation logic here
+    const validationErrors = {};
+    if (!data.email.trim()) {
+      validationErrors.email = "Email cannot be empty";
+    }
+    if (!data.password.trim()) {
+      validationErrors.password = "Password cannot be empty";
+    } else if (data.password.length < 6) {
+      validationErrors.password = "Password must be at least 6 characters long";
+    }
+    setError(validationErrors);
+    if (Object.keys(validationErrors).length > 0) {
+      return;
+    }
+    // Continueing with login logic
     const { email, password } = data;
     try {
       const response = await axios.post(
@@ -27,7 +47,15 @@ const Login = () => {
       if (responseData.error) {
         toast.error(responseData.error);
       } else {
-        setData({});
+        // Set tokens in cookies
+        setCookie("accessToken", responseData.accessToken, {
+          maxAge: 60 * 60 * 24 * 7,
+        }); // Expires in 7 days
+        setCookie("refreshToken", responseData.refreshToken, {
+          maxAge: 60 * 60 * 24 * 7,
+        }); // Expires in 7 days
+
+        setData({ email: "", password: "" });
         toast.success("Login successful. Welcome!");
         router.push("/profile");
       }
@@ -67,6 +95,9 @@ const Login = () => {
                 className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-700"
                 placeholder="Enter your email"
               />
+              {error.email && (
+                <span className="text-red-500">{error.email}</span>
+              )}
             </div>
             <div className="relative">
               <label
@@ -84,17 +115,20 @@ const Login = () => {
                 className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-700"
                 placeholder="Enter your password"
               />
+              {error.password && (
+                <span className="text-red-500">{error.password}</span>
+              )}
               {showPassword ? (
                 <Eye
                   color="white"
                   className="absolute right-4 top-[69%] transform -translate-y-1/2 cursor-pointer"
-                  onClick={() => setShowPassword(!showPassword)}
+                  onClick={toggleShowPassword}
                 />
               ) : (
                 <EyeOff
                   color="white"
                   className="absolute right-4 top-[69%] transform -translate-y-1/2 cursor-pointer"
-                  onClick={() => setShowPassword(!showPassword)}
+                  onClick={toggleShowPassword}
                 />
               )}
             </div>
@@ -103,7 +137,7 @@ const Login = () => {
                 id="rememberMe"
                 type="checkbox"
                 checked={rememberMe}
-                onChange={() => setRememberMe(!rememberMe)}
+                onChange={toggleRememberMe}
                 className="mr-2"
               />
               <label htmlFor="rememberMe" className="text-white text-sm">

@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { getCookie } from 'cookies-next';
 
 export function middleware(request) {
-  const token = getCookie('token', { req: request }); // Get token from cookies
+  const token = getCookie('accessToken', { req: request }); // Get token from cookies
 
   // Define the path you want to protect
   const protectedPaths = ['/profile'];  // Add more paths as needed
