@@ -6,10 +6,12 @@ Welcome to the MelodyVerse frontend repository! This project is the client-side 
 
 You can view the live version of the website at: [MelodyVerse](https://melodyverse-ansh.netlify.app)
 
-## Features
+## Key Features
 
 - **Homepage**: Includes a navigation bar with login and signup buttons.
-- **Authentication**: Users must sign up and then log in to access protected routes.
+- **Protected Routes**: Utilizes Next.js middleware to manage protected routes:
+  - **Token Verification**: Ensures that tokens are present in cookies.
+  - **Profile Route**: If a user tries to access the `/profile` route without a valid token, they are redirected to the `/login` page.
 - **State Management**: Utilizes Zustand for efficient state management.
 - **Validation**: Implemented validation for user input.
 - **React Libraries**: Integrated several libraries including `react-hot-toast` for notifications.
