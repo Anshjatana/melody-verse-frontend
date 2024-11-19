@@ -40,7 +40,7 @@ const Login = () => {
     const { email, password } = data;
     try {
       const response = await axios.post(
-        "https://ec2-15-207-21-240.ap-south-1.compute.amazonaws.com:8000/login",
+        "http://ec2-15-207-21-240.ap-south-1.compute.amazonaws.com:8000/login",
         { email, password }
       );
       const responseData = response.data;
