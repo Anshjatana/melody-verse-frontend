@@ -60,7 +60,7 @@ const Signup = () => {
     const { username, email, password } = data;
     try {
       const response = await axios.post(
-        "https://api-melody-verse.up.railway.app/signup",
+        "https://ec2-15-207-21-240.ap-south-1.compute.amazonaws.com:8000/signup",
         { username, email, password }
       );
       const responseData = response.data;
