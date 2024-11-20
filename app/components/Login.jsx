@@ -40,7 +40,7 @@ const Login = () => {
     const { email, password } = data;
     try {
       const response = await axios.post(
-        "http://ec2-15-207-21-240.ap-south-1.compute.amazonaws.com:8000/login",
+        "https://api.melodyverse.anshjatana.online/login",
         { email, password }
       );
       const responseData = response.data;

@@ -60,7 +60,7 @@ const Signup = () => {
     const { username, email, password } = data;
     try {
       const response = await axios.post(
-        "http://ec2-15-207-21-240.ap-south-1.compute.amazonaws.com:8000/signup",
+        "https://api.melodyverse.anshjatana.online/signup",
         { username, email, password }
       );
       const responseData = response.data;
